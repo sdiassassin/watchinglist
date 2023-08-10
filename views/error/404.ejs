@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include ../frontend/layouts/header.ejs %>
+
+<style>
+    h1{
+        font-size: 6rem;
+        text-align: center;
+    }
+    .oops-back-link{
+       cursor: pointer;
+       color: #0B80FE !important;
+       font-size: 32px;
+
+    }
+</style>
+
+<body>
+
+<%- include ../frontend/layouts/menubar.ejs %>
+
+
+<section class="page-content" style="min-height: 650px">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="offset-lg-3 col-lg-6">
+                        <h1>Oops, 404!</h1>
+                        <p style="margin-top: 24px;">
+                            The page you requested could not be found, either contact your webmaster
+                            or try again. Use your browser's <a class="oops-back-link" onclick="window.history.back()"> Back </a>
+                            button to navigate to the page
+                            you have previously come from.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include ../frontend/layouts/footer.ejs %>
+
+</body>
+</html>

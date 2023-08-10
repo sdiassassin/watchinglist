@@ -1,0 +1,72 @@
+<section id="section-subscribe">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h3>Subscribe to our newsletter</h3>
+                <p class="sub-heading">Donec et magna odio. Ut semper vel magna congue condimentum.</p>
+                <form class="form-subscribe">
+                    <input type="email" placeholder="Enter your email address" />
+                    <button type="submit" class="btn btn-white">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="row text-md-left text-center">
+            <div class="col-md-10">
+                <h6 class="footer-title">Navigate</h6>
+                <ul class="footer-links">
+                    <li><a href="#">Post a Watch Listing</a></li>
+                    <li><a href="#">Store</a></li>
+                    <li><a href="#">Buyer Disclaimer</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+            </div>
+            <div class="col-md">
+                <h6 class="footer-title">Social</h6>
+                <ul class="footer-social">
+                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row justify-content-md-between">
+                    <div class="col-md-6 text-md-left text-center">
+                        <p class="copyright">&copy; 2018 BezelHeads. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-right text-center">
+                        <ul class="footer-links footer-links-2">
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<script src="/assets/dist/bundle.js"></script>
+<script src="/assets/js/jquery.min.js"></script>
+
+<script src="/assets/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script>
+    setTimeout(function () {
+        hideNotifications();
+    }, 2500);
+    var hideNotifications = function () {
+        $(".alert").slideUp(600, function () {
+            $(this).remove();
+        })
+    }
+</script>

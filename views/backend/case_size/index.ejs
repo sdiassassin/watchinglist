@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include ../layouts/header.ejs %>
+<%
+var formatTime = function (ts) {
+    var date = new Date(ts);
+    // Years part from the timestamp
+    var year = date.getFullYear();
+    // Month part from the timestamp
+    var month = date.getMonth() + 1;
+    // Day part from the timestamp
+    var day = date.getDate();
+    // Hours part from the timestamp
+    var hours = date.getHours();
+    // Minutes part from the timestamp
+    var minutes = "0" + date.getMinutes();
+    // Seconds part from the timestamp
+    var seconds = "0" + date.getSeconds();
+    // Will display time in 10:30:23 format
+    var formattedTime = year + "-" + month + "-" + day + " " + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return formattedTime;
+}
+%>
+<body>
+<div class="wrapper">
+    <%- include ../layouts/sidebar.ejs %>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <%- include ../layouts/navbar.ejs %>
+        <div class="admin-main-content">
+            <h2>Case Size Management</h2>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">Case Size List</div>
+                        <div class="card-body">
+                            <a class="btn btn-outline-primary" href="/admin/case-size/insert" id="add-new-listing">+ Add
+                                New Case Size</a>
+                            <% if(error && error.length > 0){ %>
+                                <div class="alert alert-danger">
+                                    <%= error %>
+                                </div>
+                            <% } else if(success && success.length > 0 ){ %>
+                                <div class="alert alert-success">
+                                    <%= success %>
+                                </div>
+                            <% } %>
+                            <table id="watch-list-tbl" class="table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Case Size</th>
+                                        <th>Description</th>
+                                        <th>Created At</th>
+                                        <th>Operation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <% for(var i = 0; i < cs_list.length;i++) { %>
+                                    <tr>
+                                        <td><%= cs_list[i].name %>mm</td>
+                                        <td><%= cs_list[i].description %></td>
+                                        <td><%= formatTime(cs_list[i].createdAt) %></td>
+                                        <td>
+                                            <button type="button"
+                                                    onclick="location.href='/admin/case-sizes/<%= cs_list[i].cs_id %>'"
+                                                    class="btn btn-outline-primary">Edit
+                                            </button>
+                                            <button type="button" onclick="deleteCaseSize('<%= cs_list[i].cs_id %>')"
+                                                    class="btn btn-outline-danger">Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Case Size</th>
+                                        <th>Description</th>
+                                        <th>Created At</th>
+                                        <th>Operation</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include ../layouts/footer.ejs %>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#watch-list-tbl').DataTable({"aaSorting": []});
+    });
+
+    function deleteCaseSize(csid) {
+        swal({
+            title: "Please Confirm",
+            text: "Are you sure that you want to delete this Case Size?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "rgba(243, 57, 35, 0.85)",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: false
+        }, function () {
+            location.href = "/admin/case-size/delete/" + csid;
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <a class="navbar-brand" href="/">BezelHeads</a>
+    </div>
+    <ul class="list-unstyled components">
+        <li>
+            <a href="/admin/users" class="<%= (title == 'Users')?'active':"" %>"><i class="fa fa-user"></i>&nbsp;Users</a>
+        </li>
+        <li>
+            <a href="/admin/listings"  class="<%= (title == 'Listings')?'active':"" %>"><i class="fa fa-clock"></i>&nbsp;Listings</a>
+        </li>
+        <li style="display: none">
+            <a href="/admin/categories"><i class="fa fa-list-ul"></i>&nbsp;Category</a>
+        </li>
+        <li>
+            <a href="/admin/brands" class="<%= (title == 'Brands')?'active':"" %>"><i class="fa fa-list-ul"></i>&nbsp;Brand</a>
+        </li>
+        <li>
+            <a href="/admin/case-sizes" class="<%= (title == 'Case Sizes')?'active':"" %>"><i class="fa fa-list-ul"></i>&nbsp;Case Size</a>
+        </li>
+        <li style="display: none">
+            <a href="/admin/case-materials"><i class="fa fa-list-ul"></i>&nbsp;Case Material</a>
+        </li>
+        <li style="display: none">
+            <a href="/admin/movements"><i class="fa fa-list-ul"></i>&nbsp;Movement</a>
+        </li>
+    </ul>
+</nav>

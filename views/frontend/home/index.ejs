@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include ../layouts/header.ejs %>
+
+<body>
+<%
+function calExpTime(ts) {
+    var expTime = 30 * 24 * 60 * 60; // 30days into seconds
+    var dateNum = 0, hrNum = 0;
+    var nowTs = Math.round((new Date()).getTime() / 1000); // now into seconds;
+    var createdTs = Math.round((new Date(ts).getTime() / 1000));
+    if ((nowTs - createdTs) > expTime) return -1;
+    var remainTime = expTime - nowTs + createdTs;
+    dateNum = Math.floor(remainTime / (60 * 60 * 24));
+    remainTime = remainTime - dateNum * 60 * 60 * 24;
+    if (remainTime > 60 * 60) {
+        hrNum = Math.floor(remainTime / 3600);
+    }
+    var retStr = "";
+    if(dateNum>0){
+        if(dateNum == 1) retStr += dateNum + "day";
+        else retStr += dateNum + "days";
+    }
+    if(hrNum>0){
+        if(hrNum == 1){
+            if(retStr == ""){
+                retStr += hrNum + "hour";
+            }else{
+                retStr += ", " + hrNum + "hour";
+            }
+        }else{
+            if(retStr == ""){
+                retStr += hrNum + "hours";
+            }else{
+                retStr += ", " + hrNum + "hours";
+            }
+        }
+    }
+    return retStr;
+}
+%>
+
+<%- include ../layouts/menubar.ejs %>
+
+<section id="hero-home" class="hero">
+    <div class="d-flex">
+        <div class="d-flex align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Welcome to BezelHeads</h1>
+                        <p class="sub-heading">Etiam molestie nisi molestie est commodo suscipit.</p>
+                        <div class="swiper-home-wrapper">
+                            <div class="swiper-home">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <div class="swiper-slide-thumb"><img src="/assets/img/slide1.jpg" data-bg="true" /></div>
+                                        <div class="d-flex">
+                                            <div class="d-flex">
+                                                <div class="swiper-content">
+                                                    <div class="row">
+                                                        <div class="col-lg-10">
+                                                            <h2>Cras tempus mi et aliquam ullamcorper</h2>
+                                                            <a href="#" class="btn btn-white">Explore</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <div class="swiper-slide-thumb"><img src="/assets/img/slide2.jpg" data-bg="true" /></div>
+                                        <div class="d-flex">
+                                            <div class="d-flex">
+                                                <div class="swiper-content">
+                                                    <div class="row">
+                                                        <div class="col-lg-10">
+                                                            <h2>Nullam pharetra, nisl id semper commodo, leo ante auctor sapien</h2>
+                                                            <a href="#" class="btn btn-white">Discover</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-slide bg-accent">
+                                        <div class="d-flex">
+                                            <div class="d-flex">
+                                                <div class="swiper-content">
+                                                    <div class="row">
+                                                        <div class="col-lg-10">
+                                                            <h2>Nullam pharetra, nisl id semper commodo, leo ante auctor sapien</h2>
+                                                            <a href="#" class="btn btn-white">Discover</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-pagination"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr/>
+
+<div class="d-flex flex-column">
+    <section class="page-content order-2 order-md-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center text-md-left">
+                    <h3>Browse listings</h3>
+                    <p class="sub-heading">Duis tristique imperdiet sapien, sed vestibulum turpis iaculis in.</p>
+                    <div class="listings">
+                        <%
+                        for(var i = 0; i<watch_list.length;i++){ %>
+                            <div class="listings-entry">
+                                <div class="listings-block">
+                                    <div class="listings-block-header">
+                                        <div>
+                                            by <a href="#" class="listings-block-author"><%= watch_list[i].contact_name %></a>
+                                        </div>
+                                        <div>
+                                            <div class="listings-block-time-left">
+                                                <span class="bh bh-time-limit-1"></span>
+                                                <%= calExpTime(watch_list[i].createdAt) %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="/listings-individual/<%= watch_list[i].sku %>" class="listings-block-thumb">
+                                        <img src="<%= watch_list[i].thumbnails[0] %>" />
+                                    </a>
+                                    <div class="listings-block-caption">
+                                        <a href="/listings-individual/<%= watch_list[i].sku %>" class="name">
+                                            <%= watch_list[i].age %>  <%= watch_list[i].brand %> <%= watch_list[i].model %>
+                                        </a>
+                                        <div class="spec">
+                                            <span class="bh bh-compass-south-1"></span>
+                                            Location: <%= watch_list[i].location %>
+                                        </div>
+                                        <div class="spec">
+                                            <span class="bh bh-bandaid-1"></span>
+                                            Condition: <%= (typeof watch_list[i].condition == "undefined")?"New":watch_list[i].condition %>
+                                        </div>
+                                        <div class="spec">
+                                            <span class="bh bh-diploma-1">
+                                            </span>Certificate: <%= (watch_list[i].is_cert)?'Yes':'No' %>
+                                        </div>
+                                        <div class="spec">
+                                            <span class="bh bh-open-box-1">
+                                            </span>Box: <%= (watch_list[i].is_box)?'Yes':'No' %>
+                                        </div>
+                                    </div>
+                                    <div class="listings-block-footer">
+                                        <div class="price">$<%= watch_list[i].price %></div>
+                                        <a href="/listings-individual/<%= watch_list[i].sku %>"
+                                           class="btn btn-block btn-black">View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <%}%>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="/listings" class="btn btn-outline-black">See all watches</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="order-1"/>
+
+    <section class="page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center text-md-left">
+                    <h3>What are you searching for?</h3>
+                    <p class="sub-heading">Nullam pharetra, nisl id semper commodo.</p>
+                    <div class="swiper-categories-wrapper">
+                        <div class="swiper-categories">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/casual2.png" /></div>
+                                        <div class="category-name">Rolex</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/chrono2.png" /></div>
+                                        <div class="category-name">Omega</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/digital2.png" /></div>
+                                        <div class="category-name">Tag Heuer</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/dress2.png" /></div>
+                                        <div class="category-name">Cartier</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/fashion2.png" /></div>
+                                        <div class="category-name">Patek Philippe</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/luxury2.png" /></div>
+                                        <div class="category-name">Audemars Piguet</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/otro2.png" /></div>
+                                        <div class="category-name">Jaeger-LeCoultre</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/smart2.png" /></div>
+                                        <div class="category-name">IWC</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/luxury2.png" /></div>
+                                        <div class="category-name">Vacheron Constantin</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/otro2.png" /></div>
+                                        <div class="category-name">Seiko</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category">
+                                        <div class="category-thumb"><img src="/assets/img/categories/smart2.png" /></div>
+                                        <div class="category-name">Bvlgari</div>
+                                    </a>
+                                </div>
+                                <div class="swiper-slide">
+                                    <a href="#" class="category more">
+                                        <div class="category-thumb"><img src="/assets/img/categories/more.png" /></div>
+                                        <div class="category-name">More</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-btn swiper-btn-left"><div class="swiper-button-prev swiper-button-white"></div></div>
+                        <div class="swiper-btn swiper-btn-right"><div class="swiper-button-next swiper-button-white"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="#" class="btn btn-outline-primary">Take me to all brands</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<%- include ../layouts/footer.ejs %>
+
+
+</body>
+</html>

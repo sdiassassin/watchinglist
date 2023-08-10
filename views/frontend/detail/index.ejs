@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include ../layouts/header.ejs %>
+
+<body>
+
+<%- include ../layouts/menubar.ejs %>
+<%
+function calExpTime(ts) {
+    var expTime = 30 * 24 * 60 * 60; // 30days into seconds
+    var dateNum = 0, hrNum = 0;
+    var nowTs = Math.round((new Date()).getTime() / 1000); // now into seconds;
+    var createdTs = Math.round((new Date(ts).getTime() / 1000));
+    if ((nowTs - createdTs) > expTime) return -1;
+    var remainTime = expTime - nowTs + createdTs;
+    dateNum = Math.floor(remainTime / (60 * 60 * 24));
+    remainTime = remainTime - dateNum * 60 * 60 * 24;
+    if (remainTime > 60 * 60) {
+        hrNum = Math.floor(remainTime / 3600);
+    }
+    var retStr = "";
+    if(dateNum>0){
+        if(dateNum == 1) retStr += dateNum + "day";
+        else retStr += dateNum + "days";
+    }
+    if(hrNum>0){
+        if(hrNum == 1){
+            if(retStr == ""){
+                retStr += hrNum + "hour";
+            }else{
+                retStr += ", " + hrNum + "hour";
+            }
+        }else{
+            if(retStr == ""){
+                retStr += hrNum + "hours";
+            }else{
+                retStr += ", " + hrNum + "hours";
+            }
+        }
+    }
+    return retStr;
+}
+%>
+<section class="page-content">
+    <div class="container">
+        <div class="row" style="display: <%= (watch_info.is_sold)? 'block':'none'; %>">
+            <div class="col-lg-12">
+                <div class="note">We're sorry, but this item has been marked as sold.</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-md-6 order-last order-md-first">
+                <div class="swiper-frame <%= (watch_info.is_sold)?"marked-sold":"" %>" >
+                    <div class="swiper-container gallery-top">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[0] %>" /></div>
+                            <% if(typeof watch_info.thumbnails[1] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[1] %>" /></div>
+                            <% } %>
+                            <% if(typeof watch_info.thumbnails[2] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[2] %>" /></div>
+                            <% } %>
+                            <% if(typeof watch_info.thumbnails[3] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[3] %>" /></div>
+                            <% } %>
+                            <% if(typeof watch_info.thumbnails[4] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[4] %>" /></div>
+                            <% } %>
+                            <% if(typeof watch_info.thumbnails[5] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[5] %>" /></div>
+                            <% } %>
+                            <% if(typeof watch_info.thumbnails[6] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[6] %>" /></div>
+                            <% } %>
+                        </div>
+                        <div class="swiper-button-next swiper-button-black"></div>
+                        <div class="swiper-button-prev swiper-button-black"></div>
+                    </div>
+                    <div class="swiper-container gallery-thumbs">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[0] %>" /></div>
+                            <% if(typeof watch_info.thumbnails[1] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[1] %>" /></div>
+                            <% } %>
+                            <% if(typeof watch_info.thumbnails[2] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[2] %>" /></div>
+                            <% } %>
+                            <% if(typeof watch_info.thumbnails[3] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[3] %>" /></div>
+                            <% } %>
+                            <% if(typeof watch_info.thumbnails[4] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[4] %>" /></div>
+                            <% } %>
+                            <% if(typeof watch_info.thumbnails[5] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[5] %>" /></div>
+                            <% } %>
+                            <% if(typeof watch_info.thumbnails[6] != "undefined") { %>
+                                <div class="swiper-slide"><img src="/<%= watch_info.thumbnails[6] %>" /></div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-about">
+                    <h4>About this watch</h4>
+                    <p><%= watch_info.description %></p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 position-unset">
+                <div class="product-info">
+                    <div class="product-header">
+                        <div class="product-header-author">
+                            listed by
+                            <a href="#" data-trigger="tooltip">Dan Masters</a>
+                            <div class="custom-tooltip">
+                                <div class="custom-tooltip-block">
+                                    <div class="user-overview">
+                                        <div class="user-avatar"><img src="/assets/img/60.jpg" data-bg="true" /></div>
+                                        <div class="user-name"><a href="#">Dan Masters</a></div>
+                                        <div class="user-rating">
+                                            <div class="rating rating-4half"></div> <a href="#">(45 reviews)</a>
+                                        </div>
+                                        <div class="user-social">
+                                            <ul>
+                                                <li><a href="#" class="s-fb"><i class="fab fa-facebook-f"></i></a></li>
+                                                <li><a href="#" class="s-tw"><i class="fab fa-twitter"></i></a></li>
+                                                <li><a href="#" class="s-insta"><i class="fab fa-instagram"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-header-time"><span class="bh bh-time-limit-1"></span> <%= calExpTime(watch_info.createdAt) %></div>
+                    </div>
+                    <div class="product-meta">
+                        <div class="product-meta-brand"><%= watch_info.brand %></div>
+                        <div class="product-meta-model"><%= watch_info.model %></div>
+                        <div class="product-meta-number"><%= watch_info.sku %></div>
+                    </div>
+                    <div class="product-price">&dollar;<%= watch_info.price %></div>
+                    <div class="product-actions">
+                        <div>
+                            <a href="#" class="btn btn-block btn-primary">Call</a>
+                        </div>
+                        <div>
+                            <a href="#" class="btn btn-block btn-outline-primary">Send a message</a>
+                        </div>
+                    </div>
+                    <div class="product-description">
+                        <h4>Product Description</h4>
+                        <table class="table table-description">
+                            <tbody>
+                            <tr>
+                                <td>Age</td>
+                                <td><%= watch_info.age %></td>
+                            </tr>
+                            <tr>
+                                <td>Box</td>
+                                <td><%= (watch_info.is_box)?'Yes':'No'; %></td>
+                            </tr>
+                            <tr>
+                                <td>Certificate</td>
+                                <td><%= (watch_info.is_cert)?'Yes':'No'; %></td>
+                            </tr>
+                            <tr>
+                                <td>Gender</td>
+                                <td><%= watch_info.gender; %></td>
+                            </tr>
+                            <tr>
+                                <td>Movement</td>
+                                <td><%= watch_info.movement; %></td>
+                            </tr>
+                            <tr>
+                                <td>Case Size</td>
+                                <td><%= watch_info.case_size; %></td>
+                            </tr>
+                            <tr>
+                                <td>Case Material</td>
+                                <td><%= watch_info.case_material; %></td>
+                            </tr>
+                            <tr>
+                                <td>Strap Material</td>
+                                <td><%= watch_info.strap_material; %></td>
+                            </tr>
+                            <tr>
+                                <td>Location</td>
+                                <td><%= watch_info.location; %></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="product-more d-none d-lg-block">
+                        <h4>More from <a href="#" data-trigger="tooltip">Dan Masters</a></h4>
+                        <div class="swiper-more-wrapper">
+                            <div class="swiper-more">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <div class="listings-block">
+                                            <div class="listings-block-header">
+                                                <div>
+                                                    by <a href="#" class="listings-block-author">Dan Masters</a>
+                                                </div>
+                                                <div>
+                                                    <div class="listings-block-time-left"><span class="bh bh-time-limit-1"></span><%= calExpTime(watch_info.createdAt) %></div>
+                                                </div>
+                                            </div>
+                                            <a href="#" class="listings-block-thumb"><img src="/assets/img/watches/Hublot-BigBang-301.CI.1770.RX-124153-2-181109-131755.jpg" /></a>
+                                            <div class="listings-block-caption">
+                                                <a href="#" class="name">2016 Hublot Big Bang</a>
+                                                <div class="spec"><span class="bh bh-compass-south-1"></span>Location: USA</div>
+                                                <div class="spec"><span class="bh bh-bandaid-1"></span>Condition: New</div>
+                                                <div class="spec"><span class="bh bh-diploma-1"></span>Certificate: Yes</div>
+                                                <div class="spec"><span class="bh bh-open-box-1"></span>Box: Yes</div>
+                                            </div>
+                                            <div class="listings-block-footer">
+                                                <div class="price">$3,240.00</div>
+                                                <a href="#" class="btn btn-block btn-black">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <div class="listings-block">
+                                            <div class="listings-block-header">
+                                                <div>
+                                                    by <a href="#" class="listings-block-author">Dan Masters</a>
+                                                </div>
+                                                <div>
+                                                    <div class="listings-block-time-left"><span class="bh bh-time-limit-1"></span><%= calExpTime(watch_info.createdAt) %></div>
+                                                </div>
+                                            </div>
+                                            <a href="#" class="listings-block-thumb"><img src="/assets/img/watches/Hublot-BigBang-301.CI.1770.RX-124153-2-181109-131755.jpg" /></a>
+                                            <div class="listings-block-caption">
+                                                <a href="#" class="name">2016 Hublot Big Bang</a>
+                                                <div class="spec"><span class="bh bh-compass-south-1"></span>Location: USA</div>
+                                                <div class="spec"><span class="bh bh-bandaid-1"></span>Condition: New</div>
+                                                <div class="spec"><span class="bh bh-diploma-1"></span>Certificate: Yes</div>
+                                                <div class="spec"><span class="bh bh-open-box-1"></span>Box: Yes</div>
+                                            </div>
+                                            <div class="listings-block-footer">
+                                                <div class="price">$3,240.00</div>
+                                                <a href="#" class="btn btn-block btn-black">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-pagination"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr/>
+
+<section class="page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>What are you searching for?</h3>
+                <p class="sub-heading">Nullam pharetra, nisl id semper commodo.</p>
+                <div class="swiper-categories-wrapper">
+                    <div class="swiper-categories">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <a href="#" class="category">
+                                    <div class="category-thumb"><img src="/assets/img/categories/casual2.png" /></div>
+                                    <div class="category-name">Casual</div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="#" class="category">
+                                    <div class="category-thumb"><img src="/assets/img/categories/chrono2.png" /></div>
+                                    <div class="category-name">Chrono</div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="#" class="category">
+                                    <div class="category-thumb"><img src="/assets/img/categories/digital2.png" /></div>
+                                    <div class="category-name">Digital</div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="#" class="category">
+                                    <div class="category-thumb"><img src="/assets/img/categories/dress2.png" /></div>
+                                    <div class="category-name">Dress</div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="#" class="category">
+                                    <div class="category-thumb"><img src="/assets/img/categories/fashion2.png" /></div>
+                                    <div class="category-name">Fashion</div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="#" class="category">
+                                    <div class="category-thumb"><img src="/assets/img/categories/luxury2.png" /></div>
+                                    <div class="category-name">Luxury</div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="#" class="category">
+                                    <div class="category-thumb"><img src="/assets/img/categories/otro2.png" /></div>
+                                    <div class="category-name">Otro</div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="#" class="category">
+                                    <div class="category-thumb"><img src="/assets/img/categories/smart2.png" /></div>
+                                    <div class="category-name">Smart</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-btn swiper-btn-left"><div class="swiper-button-prev swiper-button-white"></div></div>
+                    <div class="swiper-btn swiper-btn-right"><div class="swiper-button-next swiper-button-white"></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center mt-5">
+                <a href="#" class="btn btn-outline-primary">See all listings</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr/>
+
+<section class="page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>You might also like...</h3>
+                <p class="sub-heading">Duis tristique imperdiet sapien, sed vestibulum turpis iaculis in.</p>
+                <div class="listings">
+                    <div class="listings-entry">
+                        <div class="listings-block">
+                            <div class="listings-block-header">
+                                <div>
+                                    by <a href="#" class="listings-block-author">Dan Masters</a>
+                                </div>
+                                <div>
+                                    <div class="listings-block-time-left"><span class="bh bh-time-limit-1"></span>16 days, 4 hours</div>
+                                </div>
+                            </div>
+                            <a href="/listings-individual" class="listings-block-thumb"><img src="/assets/img/watches/Rolex-Cellini-50525-124695-1-181109-163609.jpg" /></a>
+                            <div class="listings-block-caption">
+                                <a href="/listings-individual" class="name">2018 Rolex Celini</a>
+                                <div class="spec"><span class="bh bh-compass-south-1"></span>Location: USA</div>
+                                <div class="spec"><span class="bh bh-bandaid-1"></span>Condition: New</div>
+                                <div class="spec"><span class="bh bh-diploma-1"></span>Certificate: Yes</div>
+                                <div class="spec"><span class="bh bh-open-box-1"></span>Box: Yes</div>
+                            </div>
+                            <div class="listings-block-footer">
+                                <div class="price">$3,240.00</div>
+                                <a href="/listings-individual" class="btn btn-block btn-black">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="listings-entry">
+                        <div class="listings-block">
+                            <div class="listings-block-header">
+                                <div>
+                                    by <a href="#" class="listings-block-author">Dan Masters</a>
+                                </div>
+                                <div>
+                                    <div class="listings-block-time-left"><span class="bh bh-time-limit-1"></span>16 days, 4 hours</div>
+                                </div>
+                            </div>
+                            <a href="/listings-individual" class="listings-block-thumb"><img src="/assets/img/watches/Breitling-SuperOceanHeritage-A17320-124456-2-181109-092129.jpg" /></a>
+                            <div class="listings-block-caption">
+                                <a href="/listings-individual" class="name">2014 Breitling Superocean Heritage</a>
+                                <div class="spec"><span class="bh bh-compass-south-1"></span>Location: USA</div>
+                                <div class="spec"><span class="bh bh-bandaid-1"></span>Condition: New</div>
+                                <div class="spec"><span class="bh bh-diploma-1"></span>Certificate: Yes</div>
+                                <div class="spec"><span class="bh bh-open-box-1"></span>Box: Yes</div>
+                            </div>
+                            <div class="listings-block-footer">
+                                <div class="price">$3,240.00</div>
+                                <a href="/listings-individual" class="btn btn-block btn-black">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="listings-entry">
+                        <div class="listings-block">
+                            <div class="listings-block-header">
+                                <div>
+                                    by <a href="#" class="listings-block-author">Dan Masters</a>
+                                </div>
+                                <div>
+                                    <div class="listings-block-time-left"><span class="bh bh-time-limit-1"></span>16 days, 4 hours</div>
+                                </div>
+                            </div>
+                            <a href="/listings-individual" class="listings-block-thumb"><img src="/assets/img/watches/Hublot-BigBang-301.CI.1770.RX-124153-2-181109-131755.jpg" /></a>
+                            <div class="listings-block-caption">
+                                <a href="/listings-individual" class="name">2016 Hublot Big Bang</a>
+                                <div class="spec"><span class="bh bh-compass-south-1"></span>Location: USA</div>
+                                <div class="spec"><span class="bh bh-bandaid-1"></span>Condition: New</div>
+                                <div class="spec"><span class="bh bh-diploma-1"></span>Certificate: Yes</div>
+                                <div class="spec"><span class="bh bh-open-box-1"></span>Box: Yes</div>
+                            </div>
+                            <div class="listings-block-footer">
+                                <div class="price">$3,240.00</div>
+                                <a href="/listings-individual" class="btn btn-block btn-black">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include ../layouts/footer.ejs %>
+
+</body>
+</html>

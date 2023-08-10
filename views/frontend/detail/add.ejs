@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include ../layouts/header.ejs %>
+<link rel="stylesheet" href="/assets/css/style.css">
+<script>
+    var selectedFiles = [];
+    Dropzone.options.myAwesomeDropzone = {
+        maxFiles:6,
+        addRemoveLinks: true,
+        init: function() {
+            this.on("maxfilesexceeded", function(file){
+                alert("No more files please!");
+            });
+            // this.on("addedfile", function() {
+            //     if (this.files[1]!=null){
+            //         this.removeFile(this.files[0]);
+            //     }
+            // });
+            this.on('complete',function(file) {
+                console.log("uploaded");
+                if(typeof file.xhr != 'undefined'){
+                    var uploadResp = file.xhr.response;
+                    uploadResp = JSON.parse(uploadResp);
+                    if(uploadResp.status == 'success'){
+                        console.log(uploadResp.data);
+                        selectedFiles.push(uploadResp.data);
+                    }else{
+                        console.log(uploadResp);
+                    }
+                }
+            })
+        },
+    };
+</script>
+<body>
+
+<%- include ../layouts/menubar.ejs %>
+
+<section class="page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>List an item</h3>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-listing">
+                    <fieldset>
+                        <h6>Item details</h6>
+                        <div class="form-row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="price">Price</label>
+                                    <input type="text" id="price" name="price" class="form-control input-price" placeholder="e.g. $1,250" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-6">
+                                <div class="form-group" id="brand_select_box">
+                                    <label for="brand">Brand</label>
+                                    <select name="brand" id="brand" data-placeholder="Please choose a brand">
+                                        <% for(var i = 0; i < bds.length;i++) { %>
+                                            <option value="<%= bds[i].name %>"><%= bds[i].name %></option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="model">Model</label>
+                                    <input type="text" id="model" name="model" class="form-control" placeholder="e.g. CELLINI" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-12">
+                                <form action="/watch/image-upload"
+                                      class="dropzone"
+                                      id="my-awesome-dropzone">
+                                    <div class="dz-message" data-dz-message>
+                                        <label id="upload-photos" for="photos">
+                                            <span class="bh bh-images-1"></span>
+                                            Browse<br>(up to 6 photos)
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Box</label>
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <div class="custom-radio">
+                                                <input type="radio" name="box" id="box_yes" />
+                                                <label for="box_yes">Yes</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="custom-radio">
+                                                <input type="radio" name="box" id="box_no" checked />
+                                                <label for="box_no">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Certificate</label>
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <div class="custom-radio">
+                                                <input type="radio" name="certificate" id="certificate_yes" checked />
+                                                <label for="certificate_yes">Yes</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="custom-radio">
+                                                <input type="radio" name="certificate" id="certificate_no" />
+                                                <label for="certificate_no">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-6">
+                                <div class="form-group"  id="gender_select_box">
+                                    <label for="gender">Gender</label>
+                                    <select name="gender" id="gender" data-placeholder="Please choose an option">
+                                        <option value="Men's">Men's</option>
+                                        <option value="Unisex">Unisex</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group" id="movement_select_box">
+                                    <label for="movement">Movement</label>
+                                    <select name="movement" id="movement" data-placeholder="Please choose an option">
+                                        <option value="Automatic">Automatic</option>
+                                        <option value="Quartz">Quartz</option>
+                                        <option value="Manual">Manual</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-4">
+                                <div class="form-group" id="case_size_select_box">
+                                    <label for="case_size">Case Size</label>
+                                    <select name="case_size" id="case_size" data-placeholder="Please choose an option">
+                                        <% for(var i =0; i<csizes.length;i++) { %>
+                                            <option value="<%= csizes[i].name %>mm"><%= csizes[i].name %>mm</option>
+                                        <% } %>
+                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="case_material">Case Material</label>
+                                    <input type="text" id="case_material" name="case_material" class="form-control" placeholder="e.g. Rose Gold" />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="strap_material">Strap Material</label>
+                                    <input type="text" id="strap_material" name="strap_material" class="form-control" placeholder="e.g. Alligator - Brown" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-6">
+                                <div class="form-group" id="condition_select_box">
+                                    <label for="condition">Condition</label>
+                                    <select name="condition" id="condition" data-placeholder="Please choose an option">
+                                        <option value="New">New</option>
+                                        <option value="Used">Used</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="age">Age</label>
+                                    <input type="text" id="age" name="age" class="form-control" placeholder="e.g. 2018" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea rows="7" id="description" name="description" class="form-control" placeholder="About this watch"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <h6>Personal details</h6>
+                        <div class="form-row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="username">Person of contact name</label>
+                                    <input type="text" id="username" name="username" class="form-control" placeholder="e.g. John Doe" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="user_phone">Person of contact phone number</label>
+                                    <input type="text" id="user_phone" name="user_phone" class="form-control" placeholder="e.g. +1 (XXX) XXXX XXXX" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="contact_email">Person of contact email address</label>
+                                    <input type="text" id="contact_email" name="contact_email" class="form-control" placeholder="e.g. john.doe@email.com" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="user_location">Location</label>
+                                    <input type="text" id="user_location" name="user_location" class="form-control" placeholder="e.g. USA" />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-group text-right">
+                            <a id="add_listing_btn" onclick="validationListing()" class="btn btn-primary">
+                               Next Step
+                            </a>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr/>
+
+<section class="page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>What are you looking for?</h3>
+                <p class="sub-heading">Duis tristique imperdiet sapien, sed vestibulum turpis iaculis in.</p>
+                <div class="watch-categories">
+                    <div class="watch-categories-entry">
+                        <a href="#" class="watch-categories-block">
+                            <div class="watch-categories-block-caption">Casual Watches</div>
+                        </a>
+                    </div>
+                    <div class="watch-categories-entry">
+                        <a href="#" class="watch-categories-block">
+                            <div class="watch-categories-block-caption">Dress Watches</div>
+                        </a>
+                    </div>
+                    <div class="watch-categories-entry">
+                        <a href="#" class="watch-categories-block">
+                            <div class="watch-categories-block-caption">Luxury Watches</div>
+                        </a>
+                    </div>
+                    <div class="watch-categories-entry">
+                        <a href="#" class="watch-categories-block">
+                            <div class="watch-categories-block-caption">Fashion Watches</div>
+                        </a>
+                    </div>
+                    <div class="watch-categories-entry">
+                        <a href="#" class="watch-categories-block">
+                            <div class="watch-categories-block-caption">Smart Watches</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include ../layouts/footer.ejs %>
+<script src="/assets/js/add_listing.js"></script>
+</body>
+</html>

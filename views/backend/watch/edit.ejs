@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include ../layouts/header.ejs %>
+<body>
+
+<script>
+    var picListStr  = ('<%= (pg_m)?watch_info.thumbnails:[]; %>');
+    var prevPicList = picListStr.split(',');
+    var selectedFiles = [];
+    Dropzone.options.myAwesomeDropzone = {
+        maxFiles:6,
+        addRemoveLinks: true,
+        init: function () {
+            this.on("maxfilesexceeded", function (file) {
+                alert("No more files please!");
+            });
+            // this.on("addedfile", function() {
+            //     if (this.files[1]!=null){
+            //         this.removeFile(this.files[0]);
+            //     }
+            // });
+            this.on('complete', function (file) {
+                console.log("uploaded");
+                if (typeof file.xhr != 'undefined') {
+                    var uploadResp = file.xhr.response;
+                    uploadResp = JSON.parse(uploadResp);
+                    if (uploadResp.status == 'success') {
+                        console.log(uploadResp.data);
+                        selectedFiles.push(uploadResp.data);
+                    } else {
+                        console.log(uploadResp);
+                    }
+                }
+            })
+        },
+    };
+</script>
+<div class="wrapper">
+    <%- include ../layouts/sidebar.ejs %>
+    <!-- Page Content  -->
+    <div id="content">
+        <%- include ../layouts/navbar.ejs %>
+        <div class="admin-main-content">
+            <h2><%= (pg_m)?"Edit":"Add"; %> Listing</h2>
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="card">
+                        <div class="card-body">
+                            <% if(error && error.length > 0){ %>
+                                <div class="alert alert-danger">
+                                    <%= error %>
+                                </div>
+                            <% } else if(success && success.length > 0 ){ %>
+                                <div class="alert alert-success">
+                                    <%= success %>
+                                </div>
+                            <% } %>
+                            <div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h5>Item Details</h5>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="vprice">Price</label>
+                                                    <input type="number" name="vprice" value="<%= (pg_m) ? watch_info.price : "" %>"
+                                                           placeholder="e.g $1,250"
+                                                           class="form-control" id="vprice" min="0" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="vpromote">Promote</label>
+                                                    <select class="form-control" name="vpromote" id="vpromote">
+                                                        <option value="" <%= (pg_m && (watch_info.promote == "" || typeof watch_info.promote=="undefined") )? "selected":"";%> >Without Promotion</option>
+                                                        <option value="start" <%= (pg_m && watch_info.promote == "start")? "selected":"";%> >Start</option>
+                                                        <option value="standard" <%= (pg_m && watch_info.promote == "pro")? "standard":"";%> >Standard</option>
+                                                        <option value="pro" <%= (pg_m && watch_info.promote == "pro")? "pro":"";%> >Pro</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="vbrand">Brand</label>
+                                                    <select class="form-control" name="vbrand" id="vbrand">
+                                                        <% for(var i =0 ;i<bds.length; i++) { %>
+                                                            <option <%= (pg_m && watch_info.brand == bds[i].name) ? "selected"  : "" %> value="<%= bds[i].name %>"><%= bds[i].name %> </option>
+                                                        <% } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label for="vmodel">Model</label>
+                                                <input name="vmodel" id="vmodel" class="form-control" value="<%= (pg_m) ? watch_info.model : "" %>"
+                                                       placeholder="e.g CELLINI">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <form action="/watch/image-upload"
+                                                      class="dropzone"
+                                                      id="my-awesome-dropzone">
+                                                    <div class="dz-message" data-dz-message>
+                                                        <label id="upload-photos" for="photos">
+                                                            <span class="bh bh-images-1"></span>
+                                                            Browse<br>(up to 6 photos)
+                                                        </label>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="vis_box">Box</label>
+                                                    <select class="form-control" name="vis_box" id="vis_box">
+                                                        <option value="true" <%= (pg_m && watch_info.is_box) ? "selected"  : "" %>>Yes</option>
+                                                        <option value="false" <%= (pg_m && !watch_info.is_box) ? "selected"  : "" %>>No</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="vis_cert">Certificate</label>
+                                                    <select class="form-control" name="vis_cert" id="vis_cert">
+                                                        <option value="true" <%= (pg_m && !watch_info.is_cert) ? "selected"  : "" %>>Yes</option>
+                                                        <option value="false" <%= (pg_m && !watch_info.is_cert) ? "selected"  : "" %>>No</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="vgender">Gender</label>
+                                                    <select class="form-control" name="vgender" id="vgender">
+                                                        <option value="Men's" <%= (pg_m && watch_info.gender == "Men's") ? "selected"  : "" %>>Men's</option>
+                                                        <option value="Unisex" <%= (pg_m && watch_info.gender == "Unisex") ? "selected"  : "" %>>Unisex</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="vmovement">Movement</label>
+                                                    <select class="form-control" name="vmovement" id="vmovement">
+                                                        <option value="Automatic" <%= (pg_m && watch_info.movement == "Automatic") ? "selected"  : "" %>>Automatic</option>
+                                                        <option value="Quartz" <%= (pg_m && watch_info.movement == "Quartz") ? "selected"  : "" %>>Quartz</option>
+                                                        <option value="Manual" <%= (pg_m && watch_info.movement == "Manual") ? "selected"  : "" %>>Manual</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label for="vcase_size">Case Size</label>
+                                                    <select class="form-control" name="vcase_size" id="vcase_size">
+                                                        <%  for(var i =0 ;i<csizes.length; i++) { %>
+                                                            <option value="<%= csizes[i].name %>mm"
+                                                                    <%= (pg_m && watch_info.case_size == (csizes[i].name + "mm")) ? "selected"  : "" %>>
+                                                                <%= csizes[i].name %>mm
+                                                            </option>
+                                                        <% } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label for="v-case-mat">Case Material</label>
+                                                    <input class="form-control" name="v-case-mat" id="v-case-mat"
+                                                           value="<%= (pg_m) ? watch_info.case_material : ""; %>" placeholder="e.g Rose Gold">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label for="v-strap-mat">Strap Material</label>
+                                                    <input class="form-control" name="v-strap-mat" id="v-strap-mat"
+                                                           value="<%= (pg_m) ? watch_info.strap_material : ""; %>" placeholder="e.g Alligator Brown">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="vcondition">Condition</label>
+                                                    <select class="form-control" name="vcondition" id="vcondition">
+                                                       <option value="New" <%= (pg_m && watch_info.condition == 'New') ? "selected" :"" %> >New</option>
+                                                       <option value="Used" <%= (pg_m && watch_info.condition == 'Used') ? "selected" :"" %> >Used</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="vage">Case Material</label>
+                                                    <input class="form-control" name="vage" id="vage"
+                                                           value="<%= (pg_m) ? watch_info.age : ""; %>" placeholder="e.g 2018">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="vsold">Sold Status</label>
+                                                    <select class="form-control" name="vsold" id="vsold">
+                                                        <option value="Yes" <%= (pg_m && watch_info.is_sold) ? "selected" :"" %> >Yes</option>
+                                                        <option value="No" <%= (pg_m && !watch_info.is_sold) ? "selected" :"" %> >No</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label for="vdescription">Description</label>
+                                                    <textarea rows="4" id="vdescription" name="vdescription"
+                                                              class="form-control"
+                                                              placeholder="About this watch"><%= (pg_m) ? watch_info.description : ""; %></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h5>Personal Details</h5>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="vname">Person of contact name</label>
+                                                    <input name="vname" id="vname" class="form-control" value="<%= (pg_m) ? watch_info.contact_name : ""; %>"
+                                                           placeholder="e.g John Doe">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="vemail">Person of contact email address</label>
+                                                    <input name="vemail" id="vemail" class="form-control" value="<%= (pg_m) ? watch_info.contact_email : ""; %>"
+                                                           placeholder="e.g john.doe@email.com">
+                                                </div>
+
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="vphone">Person of contact phone number</label>
+                                                    <input name="vphone" id="vphone" class="form-control" value="<%= (pg_m)? watch_info.contact_phone : ""; %>"
+                                                           placeholder="e.g +1(XXX)XXXX XXXX">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="vlocation">Location</label>
+                                                    <input name="vlocation" id="vlocation" class="form-control" value="<%= (pg_m) ? watch_info.location : ""; %>"
+                                                           placeholder="e.g USA">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-primary"
+                                                            onclick="saveListing()">Save Listing
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form method="post" action="/admin/listings/update?wid=<%= (pg_m) ? watch_info.watch_id : "" %>"
+                          hidden>
+                        <input type="number" name="price" id="price" value="<%= (pg_m) ? watch_info.price : ""; %>">
+                        <input type="text" name="promote" id="promote"
+                               value="<% (pg_m) ? watch_info.promote : ""; %>">
+           f             <input type="text" name="brand" id="brand" value="<%= (pg_m) ? watch_info.brand : ""; %>">
+                        <input type="text" name="model" id="model" value="<%= (pg_m) ? watch_info.model : ""; %>">
+                        <input type="text" name="thumbnails" id="thumbnails"
+                               value="<% JSON.stringify((pg_m) ? watch_info.price : []) %>">
+                        <input type="text" name="is_box" id="is_box" value="<%= (pg_m)? watch_info.is_box:""; %>">
+                        <input type="text" name="is_cert" id="is_cert" value="<%= (pg_m)?watch_info.is_cert:"";%>">
+                        <input type="text" name="gender" id="gender" value="<%= (pg_m)?watch_info.gender:"";%>">
+                        <input type="text" name="movement" id="movement" value="<%= (pg_m)?watch_info.movement:"";%>">
+                        <input type="text" name="case_size" id="case_size" value="<%= (pg_m)?watch_info.case_size:"";%>">
+                        <input type="text" name="case_material" id="case_material" value="<%= (pg_m)?watch_info.case_material:"";%>">
+                        <input type="text" name="strap_material" id="strap_material" value="<%= (pg_m)?watch_info.strap_material:"";%>">
+
+                        <input type="text" name="condition" id="condition" value="<%= (pg_m)?watch_info.condition:"";%>">
+                        <input type="text" name="age" id="age" value="<%= (pg_m)?watch_info.age:"";%>">
+
+                        <input type="text" name="is_sold" id="is_sold" value="<%= (pg_m && watch_info.is_sold)? "Yes":"No";%>">
+
+                        <input type="text" name="description" id="description" value="<%= (pg_m)?watch_info.description:"";%>">
+                        <input type="text" name="contact_name" id="contact_name" value="<%= (pg_m)?watch_info.contact_name:"";%>">
+                        <input type="text" name="contact_email" id="contact_email" value="<%= (pg_m)?watch_info.contact_email:"";%>">
+                        <input type="text" name="contact_phone" id="contact_phone" value="<%= (pg_m)?watch_info.contact_phone:"";%>">
+                        <input type="text" name="location" id="location" value="<%= (pg_m)?watch_info.location:"";%>">
+                        <button type="submit" id="update_listing"></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include ../layouts/footer.ejs %>
+</div>
+
+<script>
+    function saveListing() {
+        $('#price').val($('#vprice').val());
+        $('#promote').val($('#vpromote').val());
+        $('#model').val($('#vmodel').val());
+
+        $('#is_box').val($('#vis_box').val());
+        $('#is_cert').val($('#vis_cert').val());
+        $('#gender').val($('#vgender').val());
+        $('#brand').val($('#vbrand').val());
+        $('#movement').val($('#vmovement').val());
+        $('#case_size').val($('#vcase_size').val());
+        $('#case_material').val($('#v-case-mat').val());
+        $('#strap_material').val($('#v-strap-mat').val());
+
+        $('#condition').val($('#vcondition').val());
+        $('#age').val($('#vage').val());
+        $('#is_sold').val($('#vsold').val());
+
+        $('#description').val($('#vdescription').val());
+        $('#contact_name').val($('#vname').val());
+        $('#contact_email').val($('#vemail').val());
+        $('#contact_phone').val($('#vphone').val());
+        $('#location').val($('#vlocation').val());
+
+        if(selectedFiles.length == 0){
+            $('#thumbnails').val(prevPicList);
+        }else{
+            $('#thumbnails').val(selectedFiles);
+        }
+
+
+        $('#update_listing').click();
+
+    }
+</script>
+</body>
+</html>

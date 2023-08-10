@@ -1,0 +1,53 @@
+<header>
+    <div class="navbar-band">
+        <p>Over <span>60 luxury brands</span> - <a href="/listings">Shop Now</a></p>
+        <button type="button" class="navbar-band-close" data-dismiss="navbar-band">
+            &times;
+        </button>
+    </div>
+    <nav class="navbar navbar-expand-md">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">BezelHeads</a>
+            <div class="navbar-search">
+                <form class="form-search" action="/listings">
+                    <input type="text" placeholder="I'm looking for..." name="q" />
+                </form>
+            </div>
+
+            <button class="navbar-toggler" type="button" data-toggle="navbar-menu" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="navbar-menu" id="navbar-menu">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/listings">Browse Listings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">How It Works</a></li>
+                    <li class="nav-item" style="display: none"><a class="nav-link" href="#">About</a></li>
+                    <li class="nav-item" style="display: none"><a class="nav-link" href="#">Blog</a></li>
+                    <% if(session.login) { %>
+                        <li class="nav-item dropdown">
+                            <a href="#" data-toggle="dropdown-custom" class="navbar-user-menu">
+                                <img src="<%= (typeof session.user.avatar !="undefined" )? "/"+session.user.avatar:'/assets/img/default_avatar.png'; %>" data-bg="true" />
+                            </a>
+                            <div class="dropdown-custom">
+                                <div class="dropdown-custom-content">
+                                    <a href="/my-listings">My Listings</a>
+                                    <a href="/my-messages">My Messages<span class="count">3</span></a>
+                                    <a href="/account-settings">Account Settings</a>
+                                    <% if(session.user.role == 'admin') { %>
+                                        <a href="/admin/users">Admin Area </a>
+                                    <% } %>
+                                    <a href="/auth/logout" style="display: block">Log Out</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item"><a class="btn btn-outline-accent" href="/add-listing">+ List an Item</a></li>
+                    <% } else { %>
+                        <li class="nav-item"><a class="nav-link" href="/auth/login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/auth/register">Register</a></li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

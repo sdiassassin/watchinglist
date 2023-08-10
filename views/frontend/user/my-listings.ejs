@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include ../layouts/header.ejs %>
+
+<body>
+<%- include ../layouts/menubar.ejs %>
+<%
+    function getExpireTime(ts) {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        var dt = (new Date(ts)).getTime();
+        var expTs = dt + 30 * 24 * 60 * 60 * 1000;
+        var expDt = new Date(expTs);
+        return expDt.getDate() + " " + monthNames[expDt.getMonth()] + ", " + expDt.getFullYear();
+
+    }
+%>
+<section class="page-content" style="min-height: 500px">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>My listings</h3>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-listings">
+                    <div class="table-listings-thead">
+                        <div class="table-listings-thead-tr">
+                            <div class="table-listings-thead-th">&nbsp;</div>
+                            <div class="table-listings-thead-th">&nbsp;</div>
+                            <div class="table-listings-thead-th col-title">Title</div>
+                            <div class="table-listings-thead-th">Expires</div>
+                            <div class="table-listings-thead-th">Price</div>
+                        </div>
+                    </div>
+                    <div class="table-listings-tbody">
+                        <% for(var i = 0; i<my_listings.length;i++) { %>
+                            <div class="table-listings-tbody-tr">
+                                <div class="table-listings-tbody-td">
+                                    <div class="table-listings-tbody-td-inner">
+                                        <div class="table-checkbox" data-sku ="<%= my_listings[i].sku;%>"
+                                             onclick="toggleSelListing(this)"></div>
+                                    </div>
+                                </div>
+                                <div class="table-listings-tbody-td">
+                                    <div class="table-listings-tbody-td-inner">
+                                        <div class="listing-thumb">
+                                            <img src="<%= my_listings[i].thumbnails[0] %>" data-bg="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-listings-tbody-td col-title">
+                                    <div class="table-listings-tbody-td-inner">
+                                        <div class="listing-title"><a href="/listings-individual/<%= my_listings[i].sku %>">
+                                                2018 <%= my_listings[i].brand  %> <%= my_listings[i].model %></a>
+                                        </div>
+                                        <div class="listing-stats">
+                                            <div>Views: 3,420</div>
+                                            <div>Interested: 249</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-listings-tbody-td">
+                                    <div class="table-listings-tbody-td-inner">
+                                        <div class="listing-price"><%= getExpireTime(my_listings[i].createdAt) %></div>
+                                    </div>
+                                </div>
+                                <div class="table-listings-tbody-td">
+                                    <div class="table-listings-tbody-td-inner">
+                                        <div class="listing-price">$<%= my_listings[i].price %></div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="listing-actions">
+                    <div><a class="btn btn-primary" onclick="deleteListing()">Delete</a></div>
+                    <div><a class="btn btn-primary" onclick="makeSoldListing()">Mark as sold</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include ../layouts/footer.ejs %>
+
+<script>
+    function toggleSelListing(self){
+        $(self).toggleClass('selected');
+    }
+    function deleteListing() {
+        ///get Selected Listing
+        var wathcIds = [];
+        $('.table-checkbox.selected').each(function () {
+            wathcIds.push($(this).data('sku'));
+        })
+        swal({
+            title: "Please Confirm",
+            text: "Are you sure that you want to delete selected Listing?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "rgba(243, 57, 35, 0.85)",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: false
+        }, function(){
+            location.href = "/listings/bulk-delete?wids=" + wathcIds.join(',');
+        });
+    }
+    function makeSoldListing() {
+        var wathcIds = [];
+        $('.table-checkbox.selected').each(function () {
+            wathcIds.push($(this).data('sku'));
+        })
+        swal({
+            title: "Please Confirm",
+            text: "Are you sure that you want to mark selected Listing as Sold?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "rgba(243, 57, 35, 0.85)",
+            confirmButtonText: "Yes, Mark it!",
+            closeOnConfirm: false
+        }, function(){
+            location.href = "/listings/bulk-mark-sold?wids=" + wathcIds.join(',');
+        });
+    }
+</script>
+</body>
+</html>

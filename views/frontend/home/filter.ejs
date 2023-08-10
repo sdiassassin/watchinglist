@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include ../layouts/header.ejs %>
+
+<body>
+<%
+function calExpTime(ts) {
+    var expTime = 30 * 24 * 60 * 60; // 30days into seconds
+    var dateNum = 0, hrNum = 0;
+    var nowTs = Math.round((new Date()).getTime() / 1000); // now into seconds;
+    var createdTs = Math.round((new Date(ts).getTime() / 1000));
+    if ((nowTs - createdTs) > expTime) return -1;
+    var remainTime = expTime - nowTs + createdTs;
+    dateNum = Math.floor(remainTime / (60 * 60 * 24));
+    remainTime = remainTime - dateNum * 60 * 60 * 24;
+    if (remainTime > 60 * 60) {
+        hrNum = Math.floor(remainTime / 3600);
+    }
+    var retStr = "";
+    if(dateNum>0){
+        if(dateNum == 1) retStr += dateNum + "day";
+        else retStr += dateNum + "days";
+    }
+    if(hrNum>0){
+        if(hrNum == 1){
+            if(retStr == ""){
+               retStr += hrNum + "hour";
+            }else{
+               retStr += ", " + hrNum + "hour";
+            }
+        }else{
+            if(retStr == ""){
+                retStr += hrNum + "hours";
+            }else{
+                retStr += ", " + hrNum + "hours";
+            }
+        }
+    }
+    return retStr;
+}
+%>
+
+<%- include ../layouts/menubar.ejs %>
+
+<section class="page-content">
+    <div class="container container-listing">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <a href="#" class="btn btn-block btn-primary d-lg-none mb-4" data-trigger="filter">Filter
+                            Options</a>
+                        <div class="filter-wrapper">
+                            <div class="filter-close"></div>
+                            <h3>Filter</h3>
+                            <p class="sub-heading">Filter by...</p>
+                            <div class="filter-group">
+                                <button type="button" class="filter-group-button"
+                                        data-toggle="collapse" data-target="#filter-gender"
+                                        aria-expanded="true">Gender <span class="fas fa-minus"></span>
+                                </button>
+                                <div id="filter-gender" class="collapse show">
+                                    <div class="filter-group-inner" id="gender_filter">
+                                        <div class="filter-group-scrollable">
+                                            <div class="filter-checkbox">
+                                                <input type="checkbox" id="men" name="gender"/>
+                                                <label for="men">Men's<sub>(320)</sub></label>
+                                            </div>
+                                            <div class="filter-checkbox">
+                                                <input type="checkbox" id="uni" name="gender"/>
+                                                <label for="uni">Unisex<sub>(44)</sub></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <button type="button" class="filter-group-button"
+                                        data-toggle="collapse" data-target="#filter-brands"
+                                        aria-expanded="true">Brand <span class="fas fa-minus"></span>
+                                </button>
+                                <div id="filter-brands" class="collapse show">
+                                    <div class="filter-group-inner" id="brand_filter">
+                                        <div class="filter-group-scrollable">
+                                            <% for(var k = 0; k<bds.length; k++) { %>
+                                                <div class="filter-checkbox">
+                                                    <input type="checkbox" id="brand_<%= bds[k].name.toLowerCase() %>" name="brand"/>
+                                                    <label for="brand_<%= bds[k].name.toLowerCase() %>"><%= bds[k].name %><sub>(20)</sub></label>
+                                                </div>
+                                            <% } %>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <button type="button" class="filter-group-button"
+                                        data-toggle="collapse" data-target="#filter-case-size"
+                                        aria-expanded="true">Case Size <span class="fas fa-minus"></span>
+                                </button>
+                                <div id="filter-case-size" class="collapse show">
+                                    <div class="filter-group-inner" id="casesize_filter">
+                                        <div class="filter-group-scrollable">
+                                            <% for(var j=0; j<csizes.length; j++) { %>
+                                                <div class="filter-checkbox">
+                                                    <input type="checkbox" id="casesize_<%= csizes[j].name %>" name="case_size"/>
+                                                    <label for="casesize_<%= csizes[j].name %>"><%= csizes[j].name %>mm<sub>(40)</sub></label>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <button type="button" class="filter-group-button"
+                                        data-toggle="collapse" data-target="#filter-case-material"
+                                        aria-expanded="true">Case Material <span class="fas fa-minus"></span>
+                                </button>
+                                <div id="filter-case-material" class="collapse show">
+                                    <div class="filter-group-inner" id="case_material_filter">
+                                        <div class="filter-group-scrollable">
+                                            <div class="filter-checkbox">
+                                                <input type="checkbox" id="case_material_1" name="case_material"/>
+                                                <label for="case_material_1">Material 1<sub>(44)</sub></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <button type="button" class="filter-group-button"
+                                        data-toggle="collapse" data-target="#filter-movement"
+                                        aria-expanded="true">Movement <span class="fas fa-minus"></span>
+                                </button>
+                                <div id="filter-movement" class="collapse show">
+                                    <div class="filter-group-inner" id="movement_filter">
+                                        <div class="filter-group-scrollable">
+                                            <div class="filter-checkbox">
+                                                <input type="checkbox" id="movement_automatic" name="movement"/>
+                                                <label for="movement_automatic">Automatic<sub>(12)</sub></label>
+                                            </div>
+                                            <div class="filter-checkbox">
+                                                <input type="checkbox" id="movement_manual" name="movement"/>
+                                                <label for="movement_manual">Manual<sub>(54)</sub></label>
+                                            </div>
+                                            <div class="filter-checkbox">
+                                                <input type="checkbox" id="movement_quartz" name="movement"/>
+                                                <label for="movement_quartz">Quartz<sub>(54)</sub></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <button type="button" class="filter-group-button"
+                                        data-toggle="collapse" data-target="#filter-price"
+                                        aria-expanded="true">Price <span class="fas fa-minus"></span>
+                                </button>
+                                <div id="filter-price" class="collapse show">
+                                    <div class="filter-group-inner">
+                                        <div class="filter-group-scrollable">
+                                            <form class="form-range">
+                                                <div><input type="text" placeholder="0" id="filter_from_price"/></div>
+                                                to
+                                                <div><input type="text" placeholder="$9,000.00" id="filter_to_price"/>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="btn btn-block btn-primary mt-3" onclick="apply_filters()" style="color: white">Apply
+                                Filters</a>
+                        </div>
+                    </div>
+                    <div class="col-lg">
+                        <h3>Browse listings</h3>
+                        <p class="sub-heading">Duis tristique imperdiet sapien, sed vestibulum turpis iaculis in.</p>
+                        <div class="listings">
+                            <%
+                            for(var i = 0; i < watch_list.length;i++){ %>
+                                <% if(calExpTime(watch_list[i].createdAt)!=-1){ %>
+                                    <div class="listings-entry">
+                                        <div class="listings-block">
+                                            <div class="listings-block-header">
+                                                <div>
+                                                    by <a href="#" class="listings-block-author">
+                                                          <%= watch_list[i].contact_name %>
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    <div class="listings-block-time-left">
+                                                        <span class="bh bh-time-limit-1"></span>
+                                                        <%= calExpTime(watch_list[i].createdAt) %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="/listings-individual/<%= watch_list[i].sku %>"
+                                               class="listings-block-thumb"><img src="<%= watch_list[i].thumbnails[0] %>"/></a>
+                                            <div class="listings-block-caption">
+                                                <a href="/listings-individual/<%= watch_list[i].sku %>"
+                                                   class="name"><%= watch_list[i].age %>   <%= watch_list[i].brand %> <%= watch_list[i].model %></a>
+                                                <div class="spec"><span class="bh bh-compass-south-1">
+                                            </span>Location: <%= watch_list[i].location %>
+                                                </div>
+                                                <div class="spec"><span class="bh bh-bandaid-1"></span>Condition: <%= (typeof watch_list[i].condition == "undefined")?"New":watch_list[i].condition %></div>
+                                                <div class="spec">
+                                            <span class="bh bh-diploma-1">
+                                            </span>Certificate: <%= (watch_list[i].is_cert) ? 'Yes' : 'No' %>
+                                                </div>
+                                                <div class="spec">
+                                            <span class="bh bh-open-box-1">
+                                            </span>Box: <%= (watch_list[i].is_box) ? 'Yes' : 'No' %>
+                                                </div>
+                                            </div>
+                                            <div class="listings-block-footer">
+                                                <div class="price">$<%= watch_list[i].price %></div>
+                                                <a href="/listings-individual/<%= watch_list[i].sku %>"
+                                                   class="btn btn-block btn-black">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <%}%>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr/>
+
+<section class="page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>What are you looking for?</h3>
+                <p class="sub-heading">Duis tristique imperdiet sapien, sed vestibulum turpis iaculis in.</p>
+                <div class="watch-categories">
+                    <div class="watch-categories-entry">
+                        <a href="#" class="watch-categories-block">
+                            <div class="watch-categories-block-caption">Casual Watches</div>
+                        </a>
+                    </div>
+                    <div class="watch-categories-entry">
+                        <a href="#" class="watch-categories-block">
+                            <div class="watch-categories-block-caption">Dress Watches</div>
+                        </a>
+                    </div>
+                    <div class="watch-categories-entry">
+                        <a href="#" class="watch-categories-block">
+                            <div class="watch-categories-block-caption">Luxury Watches</div>
+                        </a>
+                    </div>
+                    <div class="watch-categories-entry">
+                        <a href="#" class="watch-categories-block">
+                            <div class="watch-categories-block-caption">Fashion Watches</div>
+                        </a>
+                    </div>
+                    <div class="watch-categories-entry">
+                        <a href="#" class="watch-categories-block">
+                            <div class="watch-categories-block-caption">Smart Watches</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include ../layouts/footer.ejs %>
+
+<script src="/assets/js/apply_filter.js"></script>
+
+</body>
+</html>
